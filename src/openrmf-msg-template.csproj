@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RootNamespace>openrmf_msg_template</RootNamespace>
+    <ProjectGuid>{7f1b6279-9ce5-432d-82ef-70b91a1c1242}</ProjectGuid>
+    <Version>0.9</Version>
+    <InformationalVersion>This is a beta of the OpenRMF Tool Template API for getting template XML/CKL files via messaging from Cingulara</InformationalVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NATS.Client" Version="0.9.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="mongodb.driver" Version="2.7.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.1.0" />
+    <PackageReference Include="NLog" Version="4.5.11" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="1.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="nlog.config" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>
