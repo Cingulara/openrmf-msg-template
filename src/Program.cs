@@ -41,7 +41,7 @@ namespace openrmf_msg_template
                     s.ConnectionString = Environment.GetEnvironmentVariable("MONGODBCONNECTION");
                     s.Database = Environment.GetEnvironmentVariable("MONGODB");
                     TemplateRepository _templateRepo = new TemplateRepository(s);
-                    temp = _templateRepo.GetTemplateByTitle(Encoding.UTF8.GetString(natsargs.Message.Data)).Result;
+                    temp = _templateRepo.GetTemplateByTitle(SanitizeString(Encoding.UTF8.GetString(natsargs.Message.Data))).Result;
                     // when you serialize the \\ slash JSON chokes, so replace and regular \\ with 4 \\\\
                     // now setup the raw checklist class in a string to compress and send
                     string msg = temp.rawChecklist.Replace("\\","\\\\").Replace("\t","");
@@ -61,6 +61,11 @@ namespace openrmf_msg_template
             // arriving immediately.
             logger.Info("setting up the openRMF template subscription");
             IAsyncSubscription asyncNew = c.SubscribeAsync("openrmf.template.read", readTemplate);
+        }
+
+        private static string SanitizeString(string title) {
+            return title.Replace("STIG", "Security Technical Implementation Guide").Replace("MS Windows","Windows")
+            .Replace("Microsoft Windows","Windows");
         }
 
         private static ObjectId GetInternalId(string id)
