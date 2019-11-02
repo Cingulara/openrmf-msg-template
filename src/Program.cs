@@ -43,11 +43,10 @@ namespace openrmf_msg_template
                     TemplateRepository _templateRepo = new TemplateRepository(s);
                     temp = _templateRepo.GetTemplateByTitle(Encoding.UTF8.GetString(natsargs.Message.Data)).Result;
                     // when you serialize the \\ slash JSON chokes, so replace and regular \\ with 4 \\\\
-                    temp.rawChecklist = temp.rawChecklist.Replace("\\","\\\\");
-                    // now serialize the class into a string to compress and send
-                    string msg = JsonConvert.SerializeObject(temp);
+                    // now setup the raw checklist class in a string to compress and send
+                    string msg = temp.rawChecklist.Replace("\\","\\\\").Replace("\t","");
                     // publish back out on the reply line to the calling publisher
-                    logger.Info("Sending back compressed Template Data");
+                    logger.Info("Sending back compressed Template raw checklist Data");
                     c.Publish(natsargs.Message.Reply, Encoding.UTF8.GetBytes(Compression.CompressString(msg)));
                     c.Flush(); // flush the line
                 }

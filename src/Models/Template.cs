@@ -8,14 +8,14 @@ namespace openrmf_msg_template.Models
     public class Template
     {
         public Template () {
-            //CHECKLIST = new CHECKLIST();
+            CHECKLIST = new CHECKLIST();
             // default templateType is USER; otherwise SYSTEM is for default system checklist templates
             templateType = "USER";
         }
 
         public DateTime created { get; set; }
         public string description { get; set; }
-        //public CHECKLIST CHECKLIST { get; set; }
+        public CHECKLIST CHECKLIST { get; set; }
         public string rawChecklist { get; set; }
         public string stigType { get; set; }
         public string stigRelease { get; set; }
