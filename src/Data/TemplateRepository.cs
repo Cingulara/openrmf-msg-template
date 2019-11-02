@@ -14,7 +14,13 @@ namespace openrmf_msg_template.Data {
             _context = new TemplateContext(settings);
         }
 
-        // query on the title of the template for SYSTEM templates
+        /// <summary>
+        /// The query on the title of the template for SYSTEM templates. This calls a 
+        /// Request/Reply message out to NATS to get a raw checklist back based on the 
+        /// title pulled in.  The title is from the SCAP Scan XCCDF format file.
+        /// </summary>
+        /// <param name="title">The title to search on.</param>
+        /// <returns></returns>
         public async Task<Template> GetTemplateByTitle(string title)
         {
             try

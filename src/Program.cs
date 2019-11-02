@@ -18,9 +18,8 @@ namespace openrmf_msg_template
         {
             LogManager.Configuration = new XmlLoggingConfiguration($"{AppContext.BaseDirectory}nlog.config");
 
+            // setup the NLog name
             var logger = LogManager.GetLogger("openrmf_msg_template");
-            //logger.Info("log info");
-            //logger.Debug("log debug");
 
             // Create a new connection factory to create a connection.
             ConnectionFactory cf = new ConnectionFactory();
@@ -63,11 +62,21 @@ namespace openrmf_msg_template
             IAsyncSubscription asyncNew = c.SubscribeAsync("openrmf.template.read", readTemplate);
         }
 
-        private static string SanitizeString(string title) {
+        /// <summary>
+        /// Strip out acronyms and adjust known string inconsistencies to search by title for templates
+        /// </summary>
+        /// <param name="title">The title string to sanitize for the template stigType field.</param>
+        /// <returns></returns>
+            private static string SanitizeString(string title) {
             return title.Replace("STIG", "Security Technical Implementation Guide").Replace("MS Windows","Windows")
             .Replace("Microsoft Windows","Windows");
         }
 
+        /// <summary>
+        /// The unique ID of the record has to be in a particular format to search for the BSON ID in Mongo
+        /// </summary>
+        /// <param name="id">The key to be put into the Object format.</param>
+        /// <returns></returns>
         private static ObjectId GetInternalId(string id)
         {
             ObjectId internalId;
