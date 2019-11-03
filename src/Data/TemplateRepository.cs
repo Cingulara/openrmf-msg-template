@@ -20,7 +20,7 @@ namespace openrmf_msg_template.Data {
         /// title pulled in.  The title is from the SCAP Scan XCCDF format file.
         /// </summary>
         /// <param name="title">The title to search on.</param>
-        /// <returns></returns>
+        /// <returns>A Template record which contains metadata and the raw checklist XML string</returns>
         public async Task<Template> GetTemplateByTitle(string title)
         {
             try
