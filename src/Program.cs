@@ -27,7 +27,7 @@ namespace openrmf_msg_template
             // Creates a live connection to the default NATS Server running locally
             IConnection c = cf.CreateConnection(Environment.GetEnvironmentVariable("NATSSERVERURL"));
 
-            // send back a checklist based on an individual ID
+            // send back a template checklist based on an individual ID
             EventHandler<MsgHandlerEventArgs> readTemplate = (sender, natsargs) =>
             {
                 try {
@@ -36,9 +36,11 @@ namespace openrmf_msg_template
                     logger.Info("New NATS data: {0}",Encoding.UTF8.GetString(natsargs.Message.Data));
                     
                     Template temp = new Template();
+                    // setup the MongoDB connection
                     Settings s = new Settings();
                     s.ConnectionString = Environment.GetEnvironmentVariable("MONGODBCONNECTION");
                     s.Database = Environment.GetEnvironmentVariable("MONGODB");
+                    // setup the database connection
                     TemplateRepository _templateRepo = new TemplateRepository(s);
                     temp = _templateRepo.GetTemplateByTitle(SanitizeString(Encoding.UTF8.GetString(natsargs.Message.Data))).Result;
                     // when you serialize the \\ slash JSON chokes, so replace and regular \\ with 4 \\\\
