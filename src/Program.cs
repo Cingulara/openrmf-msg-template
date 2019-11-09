@@ -45,7 +45,10 @@ namespace openrmf_msg_template
                     temp = _templateRepo.GetTemplateByTitle(SanitizeString(Encoding.UTF8.GetString(natsargs.Message.Data))).Result;
                     // when you serialize the \\ slash JSON chokes, so replace and regular \\ with 4 \\\\
                     // now setup the raw checklist class in a string to compress and send
-                    string msg = temp.rawChecklist.Replace("\\","\\\\").Replace("\t","");
+                    string msg = "";
+                    if (temp != null) {
+                        msg = temp.rawChecklist.Replace("\\","\\\\").Replace("\t","");
+                    }
                     // publish back out on the reply line to the calling publisher
                     logger.Info("Sending back compressed Template raw checklist Data");
                     c.Publish(natsargs.Message.Reply, Encoding.UTF8.GetBytes(Compression.CompressString(msg)));
@@ -53,7 +56,7 @@ namespace openrmf_msg_template
                 }
                 catch (Exception ex) {
                     // log it here
-                    logger.Error(ex, "Error retrieving checklist record for template {0}", Encoding.UTF8.GetString(natsargs.Message.Data));
+                    logger.Error(ex, "Error retrieving checklist record for template {0}\n", Encoding.UTF8.GetString(natsargs.Message.Data));
                 }
             };
 
@@ -71,7 +74,7 @@ namespace openrmf_msg_template
         /// <returns></returns>
             private static string SanitizeString(string title) {
             return title.Replace("STIG", "Security Technical Implementation Guide").Replace("MS Windows","Windows")
-            .Replace("Microsoft Windows","Windows");
+            .Replace("Microsoft Windows","Windows").Replace("Dot Net","DotNet");
         }
 
         /// <summary>
