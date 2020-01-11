@@ -8,5 +8,9 @@ namespace openrmf_msg_template.Data {
     {        
         // get the template based on the title we pass in
         Task<Template> GetTemplateByTitle(string title);
+
+        // get the template based on the filename substring we pass in
+        Task<Template> GetTemplateByFilename(string filename);
+
     }
 }

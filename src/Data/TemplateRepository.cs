@@ -35,5 +35,27 @@ namespace openrmf_msg_template.Data {
                 throw ex;
             }
         }
+
+        /// <summary>
+        /// The query on the title of the template for SYSTEM templates. This calls a 
+        /// Request/Reply message out to NATS to get a raw checklist back based on the 
+        /// filename pulled in.  The filename is from the SCAP Scan XCCDF format file.
+        /// It is usually a benchmark .xml file.
+        /// </summary>
+        /// <param name="title">The title to search on.</param>
+        /// <returns>A Template record which contains metadata and the raw checklist XML string</returns>
+        public async Task<Template> GetTemplateByFilename(string filename)
+        {
+            try
+            {
+                return await _context.Templates.Find(t => t.templateType == "SYSTEM" && 
+                    t.filename.ToLower().StartsWith(filename.ToLower())).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                // log or manage the exception
+                throw ex;
+            }
+        }
     }
 }

@@ -73,6 +73,9 @@ namespace openrmf_msg_template
                     // setup the database connection
                     TemplateRepository _templateRepo = new TemplateRepository(s);
                     temp = _templateRepo.GetTemplateByTitle(SanitizeString(Encoding.UTF8.GetString(natsargs.Message.Data))).Result;
+                    if (temp == null) { // try to get by the filename based on a Nessus SCAP scan
+                        temp = _templateRepo.GetTemplateByFilename(SanitizeString(Encoding.UTF8.GetString(natsargs.Message.Data))).Result;
+                    }
                     // when you serialize the \\ slash JSON chokes, so replace and regular \\ with 4 \\\\
                     // now setup the raw checklist class in a string to compress and send
                     string msg = "";
