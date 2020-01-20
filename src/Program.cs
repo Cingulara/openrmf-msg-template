@@ -1,5 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// Copyright (c) Cingulara LLC 2019 and Tutela LLC 2019. All rights reserved.
+// Licensed under the GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007 license. See LICENSE file in the project root for full license information.
+using System;
 using NATS.Client;
 using System.Text;
 using NLog;
@@ -8,7 +9,6 @@ using openrmf_msg_template.Models;
 using openrmf_msg_template.Data;
 using openrmf_msg_template.Classes;
 using MongoDB.Bson;
-using Newtonsoft.Json;
 
 namespace openrmf_msg_template
 {
@@ -27,6 +27,7 @@ namespace openrmf_msg_template
             Options opts = ConnectionFactory.GetDefaultOptions();
             opts.MaxReconnect = -1;
             opts.ReconnectWait = 1000;
+            opts.Name = "openrmf-msg-template";
             opts.Url = Environment.GetEnvironmentVariable("NATSSERVERURL");
             opts.AsyncErrorEventHandler += (sender, events) =>
             {
@@ -72,6 +73,9 @@ namespace openrmf_msg_template
                     // setup the database connection
                     TemplateRepository _templateRepo = new TemplateRepository(s);
                     temp = _templateRepo.GetTemplateByTitle(SanitizeString(Encoding.UTF8.GetString(natsargs.Message.Data))).Result;
+                    if (temp == null) { // try to get by the filename based on a Nessus SCAP scan
+                        temp = _templateRepo.GetTemplateByFilename(SanitizeFilename(Encoding.UTF8.GetString(natsargs.Message.Data))).Result;
+                    }
                     // when you serialize the \\ slash JSON chokes, so replace and regular \\ with 4 \\\\
                     // now setup the raw checklist class in a string to compress and send
                     string msg = "";
@@ -102,21 +106,28 @@ namespace openrmf_msg_template
         /// <param name="title">The title string to sanitize for the template stigType field.</param>
         /// <returns></returns>
             private static string SanitizeString(string title) {
-            return title.Replace("STIG", "Security Technical Implementation Guide").Replace("MS Windows","Windows")
-            .Replace("Microsoft Windows","Windows").Replace("Dot Net","DotNet");
+                return title.Replace("STIG", "Security Technical Implementation Guide").Replace("MS Windows","Windows")
+                .Replace("Microsoft Windows","Windows").Replace("Dot Net","DotNet");
         }
 
         /// <summary>
-        /// The unique ID of the record has to be in a particular format to search for the BSON ID in Mongo
+        /// Strip out extra stuff up to the _Vxxxxx, make sure the next thing is an integer, 
+        /// and then do a "starts with filename" type of query
         /// </summary>
-        /// <param name="id">The key to be put into the Object format.</param>
+        /// <param name="title">The title string to sanitize for the template filename field.</param>
         /// <returns></returns>
-        private static ObjectId GetInternalId(string id)
-        {
-            ObjectId internalId;
-            if (!ObjectId.TryParse(id, out internalId))
-                internalId = ObjectId.Empty;
-            return internalId;
+        private static string SanitizeFilename(string title) {
+            int index = title.IndexOf("_V");
+            int releasenumber = 0;
+            if (index > 0 && int.TryParse(title.Substring(index+2,1), out releasenumber))
+                return title.Substring(0,index); // send back the title up to the _VXRYY part
+            // the _V is not near the Release Number, keep looking
+            index = title.IndexOf("_V", index+2);
+            if (index > 0 && int.TryParse(title.Substring(index+2,1), out releasenumber))
+                return title.Substring(0,index);
+            // catch all 
+            return title.Replace("_Manual-xccdf.xml","");
         }
+
     }
 }

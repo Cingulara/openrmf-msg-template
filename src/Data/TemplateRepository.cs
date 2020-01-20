@@ -1,8 +1,9 @@
+// Copyright (c) Cingulara LLC 2019 and Tutela LLC 2019. All rights reserved.
+// Licensed under the GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007 license. See LICENSE file in the project root for full license information.
 using openrmf_msg_template.Models;
 using System;
 using System.Threading.Tasks;
 using MongoDB.Driver;
-using MongoDB.Bson;
 
 namespace openrmf_msg_template.Data {
     public class TemplateRepository : ITemplateRepository
@@ -27,6 +28,28 @@ namespace openrmf_msg_template.Data {
             {
                 return await _context.Templates.Find(t => t.templateType == "SYSTEM" && 
                     t.stigType.ToLower() == title.ToLower()).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                // log or manage the exception
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// The query on the title of the template for SYSTEM templates. This calls a 
+        /// Request/Reply message out to NATS to get a raw checklist back based on the 
+        /// filename pulled in.  The filename is from the SCAP Scan XCCDF format file.
+        /// It is usually a benchmark .xml file.
+        /// </summary>
+        /// <param name="title">The title to search on.</param>
+        /// <returns>A Template record which contains metadata and the raw checklist XML string</returns>
+        public async Task<Template> GetTemplateByFilename(string filename)
+        {
+            try
+            {
+                return await _context.Templates.Find(t => t.templateType == "SYSTEM" && 
+                    t.filename.ToLower().StartsWith(filename.ToLower())).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
