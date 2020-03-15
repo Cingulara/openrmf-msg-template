@@ -27,7 +27,7 @@ namespace openrmf_msg_template.Data {
             try
             {
                 return await _context.Templates.Find(t => t.templateType == "SYSTEM" && 
-                    t.stigType.ToLower() == title.ToLower()).FirstOrDefaultAsync();
+                    t.stigType.ToLower() == title.ToLower()).SortByDescending(x => x.version).ThenByDescending(y => y.stigRelease).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -49,7 +49,7 @@ namespace openrmf_msg_template.Data {
             try
             {
                 return await _context.Templates.Find(t => t.templateType == "SYSTEM" && 
-                    t.filename.ToLower().StartsWith(filename.ToLower())).FirstOrDefaultAsync();
+                    t.filename.ToLower().StartsWith(filename.ToLower())).SortByDescending(x => x.version).ThenByDescending(y => y.stigRelease).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
