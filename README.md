@@ -1,3 +1,5 @@
+![.NET Core Build and Test](https://github.com/Cingulara/openrmf-msg-template/workflows/.NET%20Core%20Build%20and%20Test/badge.svg)
+
 # openrmf-msg-checklist
 Messaging service to respond to internal API requests to receive artifact and template information using a NATS Request/Reply scenario.
 * openrmf.template.read
