@@ -1,4 +1,4 @@
-VERSION ?= 1.1
+VERSION ?= 1.01.01
 NAME ?= "openrmf-msg-template"
 AUTHOR ?= "Dale Bingham"
 NO_CACHE ?= true
