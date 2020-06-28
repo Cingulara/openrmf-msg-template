@@ -5,7 +5,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>openrmf_msg_template</RootNamespace>
     <ProjectGuid>{7f1b6279-9ce5-432d-82ef-70b91a1c1242}</ProjectGuid>
-    <Version>1.0</Version>
+    <Version>1.01.01</Version>
     <InformationalVersion>This is a beta of the OpenRMF Tool Template API for getting template XML/CKL files via messaging from Cingulara</InformationalVersion>
   </PropertyGroup>
 
