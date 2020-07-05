@@ -13,8 +13,9 @@
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "env": {
-                "MONGODBCONNECTION": "mongodb://openrmftemplate:openrmf1234!@localhost/openrmftemplate?authSource=admin",
-                "MONGODB": "openrmftemplate",
+                "DBCONNECTION": "mongodb://openrmftemplate:openrmf1234!@localhost/openrmftemplate?authSource=admin",
+                "DB": "openrmftemplate",
+                "DBTYPE": "mongo",
                 "NATSSERVERURL": "nats://127.0.0.1:4222"
             },
         },

@@ -68,8 +68,10 @@ namespace openrmf_msg_template
                     Template temp = new Template();
                     // setup the MongoDB connection
                     Settings s = new Settings();
-                    s.ConnectionString = Environment.GetEnvironmentVariable("MONGODBCONNECTION");
-                    s.Database = Environment.GetEnvironmentVariable("MONGODB");
+                    if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DBTYPE")) || Environment.GetEnvironmentVariable("DBTYPE").ToLower() == "mongo") {
+                        s.ConnectionString = Environment.GetEnvironmentVariable("DBCONNECTION");
+                        s.Database = Environment.GetEnvironmentVariable("DB");
+                    }
                     // setup the database connection
                     TemplateRepository _templateRepo = new TemplateRepository(s);
                     temp = _templateRepo.GetTemplateByTitle(SanitizeString(Encoding.UTF8.GetString(natsargs.Message.Data))).Result;
