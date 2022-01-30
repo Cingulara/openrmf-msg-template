@@ -4,6 +4,7 @@ using openrmf_msg_template.Models;
 using System;
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using MongoDB.Bson;
 
 namespace openrmf_msg_template.Data {
     public class TemplateRepository : ITemplateRepository
@@ -24,16 +25,10 @@ namespace openrmf_msg_template.Data {
         /// <returns>A Template record which contains metadata and the raw checklist XML string</returns>
         public async Task<Template> GetTemplateByTitle(string title)
         {
-            try
-            {
-                return await _context.Templates.Find(t => t.templateType == "SYSTEM" && 
-                    t.stigType.ToLower() == title.ToLower()).SortByDescending(x => x.version).ThenByDescending(y => y.stigRelease).FirstOrDefaultAsync();
-            }
-            catch (Exception ex)
-            {
-                // log or manage the exception
-                throw ex;
-            }
+            var filter = Builders<Template>.Filter.Regex(s => s.stigType, new BsonRegularExpression(string.Format(".*{0}.*", title), "i"));
+            filter = filter & Builders<Template>.Filter.Eq(z => z.templateType, "SYSTEM");
+            var query = _context.Templates.Find(filter);
+            return await query.SortByDescending(x => x.version).ThenByDescending(y => y.stigRelease).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -46,16 +41,8 @@ namespace openrmf_msg_template.Data {
         /// <returns>A Template record which contains metadata and the raw checklist XML string</returns>
         public async Task<Template> GetTemplateByFilename(string filename)
         {
-            try
-            {
-                return await _context.Templates.Find(t => t.templateType == "SYSTEM" && 
-                    t.filename.ToLower().StartsWith(filename.ToLower())).SortByDescending(x => x.version).ThenByDescending(y => y.stigRelease).FirstOrDefaultAsync();
-            }
-            catch (Exception ex)
-            {
-                // log or manage the exception
-                throw ex;
-            }
+            return await _context.Templates.Find(t => t.templateType == "SYSTEM" && 
+                t.filename.ToLower().StartsWith(filename.ToLower())).SortByDescending(x => x.version).ThenByDescending(y => y.stigRelease).FirstOrDefaultAsync();
         }
     }
 }
