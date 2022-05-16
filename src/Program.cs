@@ -108,8 +108,11 @@ namespace openrmf_msg_template
         /// <param name="title">The title string to sanitize for the template stigType field.</param>
         /// <returns></returns>
             private static string SanitizeString(string title) {
-                return title.Replace("STIG", "Security Technical Implementation Guide").Replace("MS Windows","Windows")
-                .Replace("Microsoft Windows","Windows").Replace("Dot Net","DotNet");
+                if (title.EndsWith(" (STIG)"))
+                    title = title.Replace(" (STIG)", "");
+                return title.Replace("(Security Technical Implementation Guide)", "").
+                    Replace("STIG", "Security Technical Implementation Guide").Replace("MS Windows","Windows")
+                    .Replace("Microsoft Windows","Windows").Replace("Dot Net","DotNet").Trim();
         }
 
         /// <summary>
