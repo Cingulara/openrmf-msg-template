@@ -104,6 +104,11 @@ namespace openrmf_msg_template
                     // setup the database connection
                     TemplateRepository _templateRepo = new TemplateRepository(s);
                     temp = _templateRepo.GetTemplateByTitle(SanitizeString(Encoding.UTF8.GetString(natsargs.Message.Data))).Result;
+                    // if not a Regex, see if the exact title works
+                    if (temp == null) { // try to get by the filename based on a Nessus SCAP scan
+                        temp = _templateRepo.GetTemplateByExactTitle(SanitizeString(Encoding.UTF8.GetString(natsargs.Message.Data))).Result;
+                    }
+                    // worst case see if the filename works
                     if (temp == null) { // try to get by the filename based on a Nessus SCAP scan
                         temp = _templateRepo.GetTemplateByFilename(SanitizeFilename(Encoding.UTF8.GetString(natsargs.Message.Data))).Result;
                     }
