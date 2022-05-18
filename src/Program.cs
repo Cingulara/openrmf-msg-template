@@ -109,7 +109,11 @@ namespace openrmf_msg_template
                         temp = _templateRepo.GetTemplateByExactTitle(SanitizeString(Encoding.UTF8.GetString(natsargs.Message.Data))).Result;
                     }
                     // worst case see if the filename works
-                    if (temp == null) { // try to get by the filename based on a Nessus SCAP scan
+                    if (temp == null) { // try to get by the template Id if they passed that in
+                        temp = _templateRepo.GetTemplateById(SanitizeFilename(Encoding.UTF8.GetString(natsargs.Message.Data))).Result;
+                    }
+                    // worst case see if the filename works
+                    if (temp == null) { // try to get by the filename
                         temp = _templateRepo.GetTemplateByFilename(SanitizeFilename(Encoding.UTF8.GetString(natsargs.Message.Data))).Result;
                     }
                     // when you serialize the \\ slash JSON chokes, so replace and regular \\ with 4 \\\\

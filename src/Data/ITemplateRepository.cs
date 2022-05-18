@@ -12,6 +12,9 @@ namespace openrmf_msg_template.Data {
         // get by an exact title as a backup to the above
         Task<Template> GetTemplateByExactTitle(string title);
 
+        // get the template based on the _id value we pass in
+        Task<Template> GetTemplateById(string templateId);
+
         // get the template based on the filename substring we pass in
         Task<Template> GetTemplateByFilename(string filename);
     }
