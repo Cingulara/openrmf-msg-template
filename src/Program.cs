@@ -20,6 +20,35 @@ namespace openrmf_msg_template
 
             // setup the NLog name
             var logger = LogManager.GetLogger("openrmf_msg_template");
+            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("LOGLEVEL"))) // default
+                LogManager.Configuration.Variables["logLevel"] = "Warn";
+            else if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("LOGLEVEL"))) {
+                switch (Environment.GetEnvironmentVariable("LOGLEVEL"))
+                {
+                    case "5":
+                        LogManager.Configuration.Variables["logLevel"] = "Critical";
+                        break;
+                    case "4":
+                        LogManager.Configuration.Variables["logLevel"] = "Error";
+                        break;
+                    case "3":
+                        LogManager.Configuration.Variables["logLevel"] = "Warn";
+                        break;
+                    case "2":
+                        LogManager.Configuration.Variables["logLevel"] = "Info";
+                        break;
+                    case "1":
+                        LogManager.Configuration.Variables["logLevel"] = "Debug";
+                        break;
+                    case "0":
+                        LogManager.Configuration.Variables["logLevel"] = "Trace";
+                        break;
+                    default:
+                        LogManager.Configuration.Variables["logLevel"] = "Warn";
+                        break;
+                }
+            }
+            LogManager.ReconfigExistingLoggers();
 
             // Create a new connection factory to create a connection.
             ConnectionFactory cf = new ConnectionFactory();
@@ -75,7 +104,16 @@ namespace openrmf_msg_template
                     // setup the database connection
                     TemplateRepository _templateRepo = new TemplateRepository(s);
                     temp = _templateRepo.GetTemplateByTitle(SanitizeString(Encoding.UTF8.GetString(natsargs.Message.Data))).Result;
+                    // if not a Regex, see if the exact title works
                     if (temp == null) { // try to get by the filename based on a Nessus SCAP scan
+                        temp = _templateRepo.GetTemplateByExactTitle(SanitizeString(Encoding.UTF8.GetString(natsargs.Message.Data))).Result;
+                    }
+                    // worst case see if the filename works
+                    if (temp == null) { // try to get by the template Id if they passed that in
+                        temp = _templateRepo.GetTemplateById(SanitizeFilename(Encoding.UTF8.GetString(natsargs.Message.Data))).Result;
+                    }
+                    // worst case see if the filename works
+                    if (temp == null) { // try to get by the filename
                         temp = _templateRepo.GetTemplateByFilename(SanitizeFilename(Encoding.UTF8.GetString(natsargs.Message.Data))).Result;
                     }
                     // when you serialize the \\ slash JSON chokes, so replace and regular \\ with 4 \\\\

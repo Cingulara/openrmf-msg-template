@@ -31,6 +31,32 @@ namespace openrmf_msg_template.Data {
             return await query.SortByDescending(x => x.version).ThenByDescending(y => y.stigRelease).FirstOrDefaultAsync();
         }
 
+
+        /// <summary>
+        /// The query on the title of the template for SYSTEM templates. This calls a 
+        /// Request/Reply message out to NATS to get a raw checklist back based on the 
+        /// title pulled in.  The title is from the SCAP Scan XCCDF format file.
+        /// </summary>
+        /// <param name="title">The title to search on.</param>
+        /// <returns>A Template record which contains metadata and the raw checklist XML string</returns>
+        public async Task<Template> GetTemplateByExactTitle(string title)
+        {
+            var filter = Builders<Template>.Filter.Eq(s => s.stigType, title.Trim());
+            filter = filter & Builders<Template>.Filter.Eq(z => z.templateType, "SYSTEM");
+            var query = _context.Templates.Find(filter);
+            return await query.SortByDescending(x => x.version).ThenByDescending(y => y.stigRelease).FirstOrDefaultAsync();
+        }
+
+        /// <summary>
+        /// The query on the _id of the template
+        /// </summary>
+        /// <param name="templateId">The templateId to search on.</param>
+        /// <returns>A Template record which contains metadata and the raw checklist XML string</returns>
+        public async Task<Template> GetTemplateById(string templateId)
+        {
+            return await _context.Templates.Find(t => t.templateType == "SYSTEM" &&  t.InternalId == GetInternalId(templateId)).FirstOrDefaultAsync();
+        }
+
         /// <summary>
         /// The query on the title of the template for SYSTEM templates. This calls a 
         /// Request/Reply message out to NATS to get a raw checklist back based on the 
@@ -43,6 +69,15 @@ namespace openrmf_msg_template.Data {
         {
             return await _context.Templates.Find(t => t.templateType == "SYSTEM" && 
                 t.filename.ToLower().StartsWith(filename.ToLower())).SortByDescending(x => x.version).ThenByDescending(y => y.stigRelease).FirstOrDefaultAsync();
+        }
+
+        private ObjectId GetInternalId(string id)
+        {
+            ObjectId internalId;
+            if (!ObjectId.TryParse(id, out internalId))
+                internalId = ObjectId.Empty;
+
+            return internalId;
         }
     }
 }
