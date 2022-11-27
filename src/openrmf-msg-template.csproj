@@ -5,7 +5,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>openrmf_msg_template</RootNamespace>
     <ProjectGuid>{7f1b6279-9ce5-432d-82ef-70b91a1c1242}</ProjectGuid>
-    <Version>1.08.01</Version>
+    <Version>1.08.02</Version>
     <InformationalVersion>This is the OpenRMF OSS Application Template Messaging client for getting template XML/CKL files via messaging from Cingulara</InformationalVersion>
   </PropertyGroup>
 
@@ -16,6 +16,9 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="NLog" Version="4.7.13" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.7.4" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.Private.Uri" Version="4.3.2" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
 
   <ItemGroup>
