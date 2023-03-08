@@ -156,6 +156,7 @@ namespace openrmf_msg_template
                     .Replace("SCAP Benchmark","")
                     .Replace("STIG", "Security Technical Implementation Guide").Replace("MS Windows","Windows")
                     .Replace("Microsoft Windows Defender", "Microsoft Defender")
+                    .Replace("Windows Defender", "Microsoft Defender")
                     .Replace("Microsoft Windows","Windows").Replace("Dot Net","DotNet").Trim();
         }
 
