@@ -5,14 +5,14 @@
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>openrmf_msg_template</RootNamespace>
     <ProjectGuid>{7f1b6279-9ce5-432d-82ef-70b91a1c1242}</ProjectGuid>
-    <Version>1.08.02</Version>
+    <Version>1.09.01</Version>
     <InformationalVersion>This is the OpenRMF OSS Application Template Messaging client for getting template XML/CKL files via messaging from Cingulara</InformationalVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="NATS.Client" Version="0.10.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="mongodb.driver" Version="2.14.1" />
+    <PackageReference Include="mongodb.driver" Version="2.19.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="NLog" Version="4.7.13" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.7.4" />

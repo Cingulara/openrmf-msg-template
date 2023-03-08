@@ -148,8 +148,14 @@ namespace openrmf_msg_template
             private static string SanitizeString(string title) {
                 if (title.EndsWith(" (STIG)"))
                     title = title.Replace(" (STIG)", "");
-                return title.Replace("(Security Technical Implementation Guide)", "").
-                    Replace("STIG", "Security Technical Implementation Guide").Replace("MS Windows","Windows")
+                if (title.IndexOf("- NIWC") > 0) {
+                    // remove the NIWC Enhanced type of ending
+                    title = title.Substring(0, title.IndexOf("- NIWC")).Trim();
+                }
+                return title.Replace("(Security Technical Implementation Guide)", "")
+                    .Replace("SCAP Benchmark","")
+                    .Replace("STIG", "Security Technical Implementation Guide").Replace("MS Windows","Windows")
+                    .Replace("Microsoft Windows Defender", "Microsoft Defender")
                     .Replace("Microsoft Windows","Windows").Replace("Dot Net","DotNet").Trim();
         }
 
