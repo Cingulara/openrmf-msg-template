@@ -152,12 +152,18 @@ namespace openrmf_msg_template
                     // remove the NIWC Enhanced type of ending
                     title = title.Substring(0, title.IndexOf("- NIWC")).Trim();
                 }
-                return title.Replace("(Security Technical Implementation Guide)", "")
+                return title.Replace("STIG", "Security Technical Implementation Guide")
+                    .Replace("MS Windows","Windows")
                     .Replace("SCAP Benchmark","")
-                    .Replace("STIG", "Security Technical Implementation Guide").Replace("MS Windows","Windows")
+                    .Replace("Cisco IOS-XE","Cisco IOS XE")
+                    .Replace("Cisco NX-OS", "Cisco NX OS")
+                    .Replace("Cisco IOS-XR","Cisco IOS XR")
+                    .Replace("Microsoft Windows","Windows")
+                    .Replace("Dot Net","DotNet")
                     .Replace("Microsoft Windows Defender", "Microsoft Defender")
                     .Replace("Windows Defender", "Microsoft Defender")
-                    .Replace("Microsoft Windows","Windows").Replace("Dot Net","DotNet").Trim();
+                    .Replace("Windows Server 2012 MS", "Windows Server 2012/2012 R2 Member Server")
+                    .Replace("Windows Firewall with Advanced Security", "Windows Defender Firewall with Advanced Security").Trim();
         }
 
         /// <summary>
