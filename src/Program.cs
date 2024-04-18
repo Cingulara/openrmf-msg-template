@@ -121,6 +121,9 @@ namespace openrmf_msg_template
                     string msg = "";
                     if (temp != null) {
                         msg = temp.rawChecklist.Replace("\\","\\\\").Replace("\t","");
+                    } else 
+                    {
+                        logger.Warn("No template matched the information sent: {0}",SanitizeString(Encoding.UTF8.GetString(natsargs.Message.Data)));
                     }
                     // publish back out on the reply line to the calling publisher
                     logger.Info("Sending back compressed Template raw checklist Data");
@@ -152,18 +155,25 @@ namespace openrmf_msg_template
                     // remove the NIWC Enhanced type of ending
                     title = title.Substring(0, title.IndexOf("- NIWC")).Trim();
                 }
-                return title.Replace("STIG", "Security Technical Implementation Guide")
-                    .Replace("MS Windows","Windows")
-                    .Replace("SCAP Benchmark","")
-                    .Replace("Cisco IOS-XE","Cisco IOS XE")
-                    .Replace("Cisco NX-OS", "Cisco NX OS")
-                    .Replace("Cisco IOS-XR","Cisco IOS XR")
-                    .Replace("Microsoft Windows","Windows")
-                    .Replace("Dot Net","DotNet")
-                    .Replace("Microsoft Windows Defender", "Microsoft Defender")
-                    .Replace("Windows Defender", "Microsoft Defender")
-                    .Replace("Windows Server 2012 MS", "Windows Server 2012/2012 R2 Member Server")
-                    .Replace("Windows Firewall with Advanced Security", "Windows Defender Firewall with Advanced Security").Trim();
+                return title.Replace("(Security Technical Implementation Guide)", "")
+                            .Replace("STIG", "Security Technical Implementation Guide")
+                            .Replace("WIN", "Windows")
+                            .Replace("MS Windows","Windows")
+                            .Replace("SCAP Benchmark","").Replace(" SCAP","").Replace("Cisco IOS-XE","Cisco IOS XE").Replace("Cisco NX-OS", "Cisco NX OS")
+                            .Replace("Cisco IOS-XR","Cisco IOS XR")
+                            .Replace("Microsoft Windows","Windows").Replace("Dot Net","DotNet")
+                            .Replace("ASD", "Application Security and Development")
+                            .Replace("MSIE", "Microsoft Internet Explorer").Replace("REL", "Red Hat Enterprise Linux")
+                            .Replace("MSSQL", "MS SQL Server").Replace("SVR", "Server").Replace("WRK", "Workstation")
+                            .Replace("Windows Server 2012 MS", "Windows Server 2012/2012 R2 Member Server")
+                            .Replace("Microsoft Windows Defender", "Microsoft Defender")
+                            .Replace("Windows Defender", "Microsoft Defender").Replace("Windows Server 2012 MS", "Windows Server 2012/2012 R2 Member Server")
+                            .Replace("Windows Firewall with Advanced Security", "Windows Defender Firewall with Advanced Security")
+                            .Replace("Microsoft Windows Defender Firewall with Advanced Security", "Windows Defender Firewall with Advanced Security")
+                            .Replace("Microsoft Defender Firewall with Advanced Security", "Windows Defender Firewall with Advanced Security")
+                            .Replace("Mozilla Firefox for Windows", "Mozilla Firefox").Replace("Mozilla Firefox for Linux", "Mozilla Firefox")
+                            .Replace("Mozilla Firefox for Unix", "Mozilla Firefox").Replace("IIS 10.0 Web Server","IIS 10.0 Server")
+                            .Replace("IIS 10.0 Web Site","IIS 10.0 Site").Trim();
         }
 
         /// <summary>
