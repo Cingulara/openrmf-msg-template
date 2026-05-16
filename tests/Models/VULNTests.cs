@@ -1,37 +1,35 @@
-using Xunit;
 using openrmf_msg_template.Models;
-using System;
+using Xunit;
 
-namespace tests.Models
+namespace tests.Models;
+
+public class VULNTests
 {
-    public class VULNTests
+    [Fact]
+    public void NewVuln_InitializesStigDataCollection()
     {
-        [Fact]
-        public void Test_NewVULNIsValid()
-        {
-            VULN v = new VULN();
-            Assert.True(v != null);
-        }
-    
-        [Fact]
-        public void Test_VULNWithDataIsValid()
-        {
-            VULN v = new VULN();
-            v.STATUS = "my status";
-            v.FINDING_DETAILS = "my status";
-            v.COMMENTS = "my status";
-            v.SEVERITY_OVERRIDE = "my status";
-            v.SEVERITY_JUSTIFICATION = "my status";
+        var vuln = new VULN();
 
-            // test things out
-            Assert.True(v != null);
-            Assert.True(v.STIG_DATA != null);
-            Assert.True(v.STIG_DATA.Count == 0);
-            Assert.True(!string.IsNullOrEmpty(v.STATUS));
-            Assert.True(!string.IsNullOrEmpty(v.FINDING_DETAILS));
-            Assert.True(!string.IsNullOrEmpty(v.COMMENTS));
-            Assert.True(!string.IsNullOrEmpty(v.SEVERITY_OVERRIDE));
-            Assert.True(!string.IsNullOrEmpty(v.SEVERITY_JUSTIFICATION));
-        }
+        Assert.NotNull(vuln.STIG_DATA);
+        Assert.Empty(vuln.STIG_DATA);
+        Assert.Null(vuln.STATUS);
+    }
+
+    [Fact]
+    public void VulnWithData_RoundTripsValues()
+    {
+        var vuln = new VULN
+        {
+            STATUS = "NotAFinding",
+            FINDING_DETAILS = "Validated",
+            COMMENTS = "Reviewed",
+            SEVERITY_OVERRIDE = "low",
+            SEVERITY_JUSTIFICATION = "Compensating controls",
+        };
+
+        Assert.Equal("NotAFinding", vuln.STATUS);
+        Assert.Equal("Validated", vuln.FINDING_DETAILS);
+        Assert.NotEqual("Open", vuln.STATUS);
+        Assert.False(string.IsNullOrWhiteSpace(vuln.SEVERITY_JUSTIFICATION));
     }
 }

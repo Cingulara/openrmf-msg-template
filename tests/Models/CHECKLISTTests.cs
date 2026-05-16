@@ -1,26 +1,31 @@
-using Xunit;
 using openrmf_msg_template.Models;
-using System;
+using Xunit;
 
-namespace tests.Models
+namespace tests.Models;
+
+public class CHECKLISTTests
 {
-    public class CHECKLISTTests
+    [Fact]
+    public void NewChecklist_InitializesNestedObjects()
     {
-        [Fact]
-        public void Test_NewCHECKLISTIsValid()
+        var checklist = new CHECKLIST();
+
+        Assert.NotNull(checklist);
+        Assert.NotNull(checklist.ASSET);
+        Assert.NotNull(checklist.STIGS);
+    }
+
+    [Fact]
+    public void Checklist_AllowsReplacingNestedObjects()
+    {
+        var checklist = new CHECKLIST
         {
-            CHECKLIST chk = new CHECKLIST();
-            Assert.True(chk != null);
-        }
-    
-        [Fact]
-        public void Test_CHECKLISTWithDataIsValid()
-        {
-            CHECKLIST chk = new CHECKLIST();
-            // test things out
-            Assert.True(chk != null);
-            Assert.True(chk.ASSET != null);
-            Assert.True(chk.STIGS != null);
-        }
+            ASSET = new ASSET { HOST_NAME = "node1" },
+            STIGS = new STIGS { iSTIG = new iSTIG() },
+        };
+
+        Assert.Equal("node1", checklist.ASSET.HOST_NAME);
+        checklist.STIGS = null;
+        Assert.Null(checklist.STIGS);
     }
 }
