@@ -1,4 +1,4 @@
-﻿// Copyright (c) Cingulara LLC 2019 and Tutela LLC 2019. All rights reserved.
+﻿// Copyright (c) Cingulara LLC 2025 and Tutela LLC 2025. All rights reserved.
 // Licensed under the GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007 license. See LICENSE file in the project root for full license information.
 using System;
 using NATS.Client;
@@ -9,6 +9,8 @@ using openrmf_msg_template.Models;
 using openrmf_msg_template.Data;
 using openrmf_msg_template.Classes;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 
 namespace openrmf_msg_template
 {
@@ -16,6 +18,8 @@ namespace openrmf_msg_template
     {
         static void Main(string[] args)
         {
+            // Configure MongoDB GUID serialization for legacy compatibility
+            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.CSharpLegacy));
             LogManager.Configuration = new XmlLoggingConfiguration($"{AppContext.BaseDirectory}nlog.config");
 
             // setup the NLog name
@@ -155,18 +159,19 @@ namespace openrmf_msg_template
                 // remove the NIWC Enhanced type of ending
                 title = title.Substring(0, title.IndexOf("- NIWC")).Trim();
             }
-            return title.Replace("STIG", "Security Technical Implementation Guide").Replace("MS Windows","Windows")
-                .Replace("SCAP Benchmark","").Replace(" SCAP","").Replace("Cisco IOS-XE","Cisco IOS XE").Replace("Cisco NX-OS", "Cisco NX OS")
-                .Replace("Cisco IOS-XR","Cisco IOS XR")
-                .Replace("Microsoft Windows","Windows").Replace("Dot Net","DotNet").Replace("Microsoft Windows Defender", "Microsoft Defender")
-                .Replace("Windows Defender", "Microsoft Defender").Replace("Windows Server 2012 MS", "Windows Server 2012/2012 R2 Member Server")
-                .Replace("Windows Firewall with Advanced Security", "Windows Defender Firewall with Advanced Security")
-                .Replace("Microsoft Windows Defender Firewall with Advanced Security", "Windows Defender Firewall with Advanced Security")
-                .Replace("Microsoft Defender Firewall with Advanced Security", "Windows Defender Firewall with Advanced Security")
-                .Replace("Mozilla Firefox for Windows", "Mozilla Firefox").Replace("Mozilla Firefox for Linux", "Mozilla Firefox")
-                .Replace("Mozilla Firefox for Unix", "Mozilla Firefox").Replace("IIS 10.0 Web Server","IIS 10.0 Server")
-                .Replace("IIS 10.0 Web Site","IIS 10.0 Site")
-                .Trim();
+            return title.Replace("STIG", "Security Technical Implementation Guide").Replace("MS Windows", "Windows")
+            .Replace("SCAP Benchmark", "").Replace(" SCAP", "").Replace("Cisco IOS-XE", "Cisco IOS XE").Replace("Cisco NX-OS", "Cisco NX OS")
+            .Replace("Cisco IOS-XR", "Cisco IOS XR")
+            .Replace("Microsoft Windows", "Windows").Replace("Dot Net", "DotNet").Replace("Microsoft Windows Defender", "Microsoft Defender")
+            .Replace("Windows Defender", "Microsoft Defender").Replace("Windows Server 2012 MS", "Windows Server 2012/2012 R2 Member Server")
+            .Replace("Windows Firewall with Advanced Security", "Windows Defender Firewall with Advanced Security")
+            .Replace("Microsoft Windows Defender Firewall with Advanced Security", "Windows Defender Firewall with Advanced Security")
+            .Replace("Microsoft Defender Firewall with Advanced Security", "Windows Defender Firewall with Advanced Security")
+            .Replace("Windows Firewall", "Windows Defender Firewall with Advanced Security")
+            .Replace("Mozilla Firefox for Windows", "Mozilla Firefox").Replace("Mozilla Firefox for Linux", "Mozilla Firefox")
+            .Replace("Mozilla Firefox for Unix", "Mozilla Firefox").Replace("IIS 10.0 Web Server", "IIS 10.0 Server")
+            .Replace("IIS 10.0 Web Site", "IIS 10.0 Site").Replace("MS SQL Server", "Microsoft SQL Server")
+            .Trim();
         }
 
         /// <summary>

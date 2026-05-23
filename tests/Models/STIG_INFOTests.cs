@@ -1,27 +1,27 @@
-using Xunit;
 using openrmf_msg_template.Models;
-using System;
+using Xunit;
 
-namespace tests.Models
+namespace tests.Models;
+
+public class STIG_INFOTests
 {
-    public class STIG_INFOTests
+    [Fact]
+    public void NewStigInfo_InitializesSiDataList()
     {
-        [Fact]
-        public void Test_NewSTIG_INFOIsValid()
-        {
-            STIG_INFO data = new STIG_INFO();
-            Assert.True(data != null);
-        }
-    
-        [Fact]
-        public void Test_STIG_INFOWithDataIsValid()
-        {
-            STIG_INFO data = new STIG_INFO();
+        var info = new STIG_INFO();
 
-            // test things out
-            Assert.True(data != null);
-            Assert.True(data.SI_DATA != null);
-            Assert.True(data.SI_DATA.Count == 0);
-        }
+        Assert.NotNull(info.SI_DATA);
+        Assert.Empty(info.SI_DATA);
+    }
+
+    [Fact]
+    public void StigInfo_AllowsAddingSiData()
+    {
+        var info = new STIG_INFO();
+        info.SI_DATA.Add(new SI_DATA { SID_NAME = "Version", SID_DATA = "V1R2" });
+
+        Assert.Single(info.SI_DATA);
+        Assert.Equal("V1R2", info.SI_DATA[0].SID_DATA);
+        Assert.NotEqual("V2R0", info.SI_DATA[0].SID_DATA);
     }
 }

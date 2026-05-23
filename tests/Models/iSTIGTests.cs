@@ -1,27 +1,28 @@
-using Xunit;
 using openrmf_msg_template.Models;
-using System;
+using Xunit;
 
-namespace tests.Models
+namespace tests.Models;
+
+public class iSTIGTests
 {
-    public class iSTIGTests
+    [Fact]
+    public void NewIStig_InitializesCollections()
     {
-        [Fact]
-        public void Test_NewiSTIGIsValid()
-        {
-            iSTIG iStig = new iSTIG();
-            Assert.True(iStig != null);
-        }
-    
-        [Fact]
-        public void Test_iSTIGWithDataIsValid()
-        {
-            iSTIG iStig = new iSTIG();
-            // test things out
-            Assert.True(iStig != null);
-            Assert.True(iStig.STIG_INFO != null);
-            Assert.True(iStig.VULN != null);
-            Assert.True(iStig.VULN.Count == 0);
-        }
+        var item = new iSTIG();
+
+        Assert.NotNull(item.STIG_INFO);
+        Assert.NotNull(item.VULN);
+        Assert.Empty(item.VULN);
+    }
+
+    [Fact]
+    public void IStig_AllowsAddingVulns()
+    {
+        var item = new iSTIG();
+        item.VULN.Add(new VULN { STATUS = "Open" });
+
+        Assert.Single(item.VULN);
+        Assert.Equal("Open", item.VULN[0].STATUS);
+        Assert.NotEqual("Closed", item.VULN[0].STATUS);
     }
 }

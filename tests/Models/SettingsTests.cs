@@ -1,29 +1,31 @@
-using Xunit;
 using openrmf_msg_template.Models;
-using System;
+using Xunit;
 
-namespace tests.Models
+namespace tests.Models;
+
+public class SettingsTests
 {
-    public class SettingsTests
+    [Fact]
+    public void NewSettings_DefaultsAreNull()
     {
-        [Fact]
-        public void Test_NewSettingsIsValid()
-        {
-            Settings art = new Settings();
-            Assert.True(art != null);
-        }
-    
-        [Fact]
-        public void Test_SettingsWithDataIsValid()
-        {
-            Settings set = new Settings();
-            set.ConnectionString = "myConnection";
-            set.Database = "user=x; database=x; password=x;";
+        var settings = new Settings();
 
-            // test things out
-            Assert.True(set != null);
-            Assert.True (!string.IsNullOrEmpty(set.ConnectionString));
-            Assert.True (!string.IsNullOrEmpty(set.Database));
-        }
+        Assert.NotNull(settings);
+        Assert.Null(settings.ConnectionString);
+        Assert.Null(settings.Database);
+    }
+
+    [Fact]
+    public void SettingsWithData_RoundTripsValues()
+    {
+        var settings = new Settings
+        {
+            ConnectionString = "mongodb://localhost:27017",
+            Database = "openrmf",
+        };
+
+        Assert.Equal("mongodb://localhost:27017", settings.ConnectionString);
+        Assert.Equal("openrmf", settings.Database);
+        Assert.NotEqual("postgres", settings.Database);
     }
 }
